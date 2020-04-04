@@ -1,0 +1,11 @@
+{
+  "appId": "io.ionic.starter",
+  "appName": "ionic-angular-course",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "cordova": {},
+  "server": {
+    "url": "http://localhost:8101"
+  }
+}
