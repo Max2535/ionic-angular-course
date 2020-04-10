@@ -13,6 +13,7 @@ export class BookingsPage implements OnInit,OnDestroy {
 
   loadedBookings:Booking[];
   private bookingSub:Subscription;
+  isLoading=false;
 
   constructor(
     private bookingService:BookingService,
@@ -23,6 +24,13 @@ export class BookingsPage implements OnInit,OnDestroy {
    this.bookingSub=this.bookingService.bookings.subscribe(bookings=>{
      this.loadedBookings=bookings;
    });
+  }
+
+  ionViewWillEnter(){
+    this.isLoading=true;
+    this.bookingService.fetchBookings().subscribe(()=>{
+      this.isLoading=false;
+    });
   }
 
   onCancelBooking(bookingId:string,slidingEl:IonItemSliding){
@@ -36,7 +44,6 @@ export class BookingsPage implements OnInit,OnDestroy {
       });
     });
     
-    //console.log('onCancelBooking');
   }
 
   ngOnDestroy(): void {
