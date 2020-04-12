@@ -4,6 +4,7 @@ import { take, map, tap, delay, switchMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Place } from './place.mode';
 import { AuthService } from '../auth/auth.service';
+import { PlaceLocation } from './location.model';
 
 interface PlaceData {
   availableFrom: string;
@@ -13,6 +14,7 @@ interface PlaceData {
   price: number;
   title: string;
   userId: string;
+  location:PlaceLocation;
 }
 
 @Injectable({
@@ -71,6 +73,7 @@ export class PlacesService {
                 new Date(resData[key].availableFrom),
                 new Date(resData[key].availableTo),
                 resData[key].userId,
+                resData[key].location,
               )
             );
           }
@@ -96,13 +99,14 @@ export class PlacesService {
          placeData.price,
          new Date(placeData.availableFrom),
          new Date(placeData.availableTo),
-         placeData.userId
+         placeData.userId,
+         placeData.location
        )
      })
     );
   }
 
-  addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date) {
+  addPlace(title: string, description: string, price: number, dateFrom: Date, dateTo: Date,location:PlaceLocation) {
     let generatedId: string;
     const newPlace = new Place(
       Math.random().toString(),
@@ -112,7 +116,8 @@ export class PlacesService {
       price,
       dateFrom,
       dateTo,
-      this.authService.userId);
+      this.authService.userId,
+      location);
 
     return this.http.post<{ name: string }>('https://ionic-angular-course-d7320.firebaseio.com/offered-places.json', { ...newPlace, id: null })
       .pipe(
@@ -151,7 +156,9 @@ export class PlacesService {
           oldPlace.price,
           oldPlace.availableFrom,
           oldPlace.availableTo,
-          oldPlace.userId);
+          oldPlace.userId,
+          oldPlace.location,
+          );
           return this.http.put(
             `https://ionic-angular-course-d7320.firebaseio.com/offered-places/${placeId}.json`,
             {...updatedPlaces[updatedPlaceIndex],id:null}

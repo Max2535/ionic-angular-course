@@ -18,7 +18,7 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./map-modal.component.scss']
 })
 export class MapModalComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('map') mapElementRef: ElementRef;
+  @ViewChild('map',{static:false}) mapElementRef: ElementRef;
   @Input() center = { lat: -34.397, lng: 150.644 };
   @Input() selectable = true;
   @Input() closeButtonText = 'Cancel';
@@ -102,5 +102,10 @@ export class MapModalComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       };
     });
+  }
+  onAddressChange(event){
+    console.log(event); 
+    const address = event;
+    this.modalCtrl.dismiss(address);
   }
 }

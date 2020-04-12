@@ -10,6 +10,6 @@ export class Place {
     public availableFrom: Date,
     public availableTo: Date,
     public userId: string,
-    public location?: PlaceLocation
+    public location: PlaceLocation
   ) {}
 }

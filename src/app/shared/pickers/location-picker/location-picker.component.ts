@@ -18,9 +18,9 @@ export class LocationPickerComponent implements OnInit {
   selectedLocationImage: string;
   isLoading = false;
 
-  constructor(private modalCtrl: ModalController, private http: HttpClient) {}
+  constructor(private modalCtrl: ModalController, private http: HttpClient) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   onPickLocation() {
     this.modalCtrl.create({ component: MapModalComponent }).then(modalEl => {
@@ -29,16 +29,17 @@ export class LocationPickerComponent implements OnInit {
           return;
         }
         const pickedLocation: PlaceLocation = {
-          lat: modalData.data.lat,
-          lng: modalData.data.lng,
-          address: null,
+          lat: modalData.data.selectedCoords.lat,
+          lng: modalData.data.selectedCoords.lng,
+          address: modalData.data.address,
           staticMapImageUrl: null
         };
+        console.log(pickedLocation);
         this.isLoading = true;
         this.getAddress(modalData.data.lat, modalData.data.lng)
           .pipe(
             switchMap(address => {
-              pickedLocation.address = address;
+              //pickedLocation.address = address;
               return of(
                 this.getMapImage(pickedLocation.lat, pickedLocation.lng, 14)
               );
@@ -58,23 +59,27 @@ export class LocationPickerComponent implements OnInit {
   private getAddress(lat: number, lng: number) {
     return this.http
       .get<any>(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${
-          environment.googleMapsAPIKey
-        }`
+        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&polygon_svg=1&namedetails=1&q=%E0%B8%A3%E0%B8%B2%E0%B8%A1`
       )
       .pipe(
         map(geoData => {
-          if (!geoData || !geoData.results || geoData.results.length === 0) {
+          if (!geoData||geoData.length==0) {
             return null;
           }
-          return geoData.results[0].formatted_address;
+          return geoData;
         })
       );
+      // `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${
+      //  environment.googleMapsAPIKey
   }
 
   private getMapImage(lat: number, lng: number, zoom: number) {
-    return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=${zoom}&size=500x300&maptype=roadmap
-    &markers=color:red%7Clabel:Place%7C${lat},${lng}
-    &key=${environment.googleMapsAPIKey}`;
+    return `
+    https://api.mapbox.com/v4/mapbox.emerald/pin-s-cross+285A98(${lng},${lat})/${lng},${lat},${zoom}/500x300@2x.png?access_token=${environment.mapBox.APT_KEY}`;
+
+//return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=${zoom}&size=500x300&maptype=roadmap
+//&markers=color:red%7Clabel:Place%7C${lat},${lng}
+//&key=${environment.googleMapsAPIKey}`;
   }
+
 }

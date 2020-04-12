@@ -8,5 +8,14 @@
 </ion-header>
 
 <ion-content>
-  <div class="map" #map></div>
+  <div class="map" #map style="display: none;"></div>
+  <vo-ui-osm-view 
+[showDebugInfo]="true"
+[showControlsZoom]="true"
+[showControlsCurrentLocation]="selectable"
+(addressChanged)="onAddressChange($event)"
+[longitudePointer]="center.lng"
+[latitudePointer]="center.lat"
+>
+</vo-ui-osm-view>
 </ion-content>

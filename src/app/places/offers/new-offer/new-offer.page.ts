@@ -67,7 +67,7 @@ export class NewOfferPage implements OnInit {
             +this.form.value.price,
             new Date(this.form.value.dateFrom),
             new Date(this.form.value.dateTo),
-            //this.form.value.location
+            this.form.value.location
           )
           .subscribe(() => {
             loadingEl.dismiss();
