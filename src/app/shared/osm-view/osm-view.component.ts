@@ -75,7 +75,22 @@ export class OsmViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }).then(loadingEl => {
       loadingEl.present();
       if (this.showControlsCurrentLocation) {
-        this.geoLocationService.getLocation().subscribe((position) => {
+
+        this.dirtyPosition = true;
+        this.position = {
+          coords: {
+            longitude: this.longitudePointer,
+            latitude: this.latitudePointer
+          }
+        };
+        this.longitude = this.longitudePointer = this.position.coords.longitude;
+        this.latitude = this.latitudePointer = this.position.coords.latitude;
+        setTimeout(() => {
+          let _Map = this.map.instance as ol.Map;
+          _Map.updateSize();
+          loadingEl.dismiss();
+        }, 1000);
+        /*this.geoLocationService.getLocation().subscribe((position) => {
           this.position = position
           if (!this.dirtyPosition) {
             this.dirtyPosition = true
@@ -85,17 +100,17 @@ export class OsmViewComponent implements OnInit, AfterViewInit, OnDestroy {
             _Map.updateSize();
             loadingEl.dismiss();
           }
-        })
+        })*/
       } else {
 
         console.log(this.longitudePointer, this.latitudePointer);
         this.longitude = this.longitudePointer;
         this.latitude = this.latitudePointer;
-       setTimeout(() => {
-        let _Map = this.map.instance as ol.Map;
-        _Map.updateSize();
-        loadingEl.dismiss();
-       }, 1000);
+        setTimeout(() => {
+          let _Map = this.map.instance as ol.Map;
+          _Map.updateSize();
+          loadingEl.dismiss();
+        }, 1000);
       }
       if (this.reverseGeoSub) {
         this.reverseGeoSub.unsubscribe()
@@ -110,6 +125,9 @@ export class OsmViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   onSingleClick(event) {
+    if (!this.showControlsCurrentLocation) {
+      return;
+    }
     const lonlat = proj.transform(event.coordinate, 'EPSG:3857', 'EPSG:4326')
     this.longitudePointer = lonlat[0]
     this.latitudePointer = lonlat[1]

@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/auth.service';
 import { Router } from '@angular/router';
+import { Plugins, Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-root',
@@ -16,19 +17,23 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private authService:AuthService,
-    private router:Router
+    private authService: AuthService,
+    private router: Router
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
+    console.log("platform:" + this.platform.is('hybrid'));
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      if (Capacitor.isPluginAvailable('SplashScreen')) {
+        Plugins.SplashScreen.hide();
+      }
+      /*this.statusBar.styleDefault();
+      this.splashScreen.hide();*/
     });
   }
-  onLogout(){
+  onLogout() {
     this.authService.logout();
     this.router.navigateByUrl('/auth');
   }

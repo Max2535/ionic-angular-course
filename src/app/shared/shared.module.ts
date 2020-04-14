@@ -7,11 +7,12 @@ import { LocationPickerComponent } from './pickers/location-picker/location-pick
 import { MapModalComponent } from './map-modal/map-modal.component';
 import { OsmViewComponent } from './osm-view/osm-view.component';
 import {HttpClientModule} from '@angular/common/http'
+import { ImagePickerComponent } from './pickers/image-picker/image-picker.component';
 
 @NgModule({
-  declarations: [LocationPickerComponent, MapModalComponent,OsmViewComponent],
+  declarations: [LocationPickerComponent, MapModalComponent,OsmViewComponent,ImagePickerComponent],
   imports: [CommonModule, IonicModule,AngularOpenlayersModule,FormsModule,HttpClientModule],
-  exports: [LocationPickerComponent, MapModalComponent,OsmViewComponent],
-  entryComponents: [MapModalComponent,OsmViewComponent]
+  exports: [LocationPickerComponent, MapModalComponent,OsmViewComponent,ImagePickerComponent],
+  entryComponents: [MapModalComponent]
 })
 export class SharedModule {}
